@@ -70,7 +70,33 @@ function getIncomeColor(income) {
 }
 
 
-var covid19Rates = L.geoJSON(null);
+var covid19Rates = L.geoJSON(null, {
+   style:function(feature) {
+      return {
+         fillColor:getCovidColor(feature.properties["Cumulative Number of Positives"]),
+         fillOpacity:0.9,
+         weight:0.7,
+         color:"#ddd"
+      }  
+   },
+   onEachFeature:function(feature, layer) {
+      let popupString = "<div class='popup-content'><h6 class='title'>"+ feature.properties.NAME_2 +"</h6>"+
+         createPopupInfo(feature.properties) +
+      "</div>";
+
+      layer.bindPopup(popupString)
+   }
+});
+
+function getCovidColor(cumCount) {
+   let colors = ['#ffffcc','#ffeda0','#fed976','#feb24c','#fd8d3c','#fc4e2a','#e31a1c','#b10026'];
+
+   if(!cumCount ) return colors[0];
+
+   return cumCount < 100 ? colors[0] : cumCount < 500 ? colors[1] : cumCount < 1000 ? colors[3] : cumCount < 5000 ? colors[4] :
+   cumCount < 10000 ? colors[5] : cumCount < 15000 ? colors[6] : colors[7];
+}
+
 var broadbandAccess = L.geoJSON(null);   
 var demographics = L.geoJSON(null);  
 var csiTsiSchools = L.geoJSON(null);
@@ -92,7 +118,7 @@ function createPopupInfo(properties) {
 
 // load map layers
 let layers = [k12Schools, schoolDistrict, incomeLevel, covid19Rates, broadbandAccess, demographics, demographics, csiTsiSchools];
-let dataUrls = ['publick12.geojson', 'schooldistrict_boundary.geojson','income_data.geojson'];
+let dataUrls = ['publick12.geojson', 'schooldistrict_boundary.geojson','income_data.geojson', 'covid.geojson'];
 
 
 dataUrls.forEach((url, index) => {
@@ -116,7 +142,8 @@ dataUrls.forEach((url, index) => {
 var overlay = {
    'Public K12 Schools':k12Schools,
    'School District Boundary': schoolDistrict,
-   'Income Levels':incomeLevel
+   'Income Levels':incomeLevel,
+   'Covid 19 Cumulative Cases':covid19Rates
 }
 
 L.control.layers({},overlay, {collapsed:false}).addTo(map);
@@ -147,10 +174,38 @@ legendControl.onAdd = function(map) {
 
 legendControl.addTo(map);
 
+
+// Covid 19 level legend
+var covid19LegendControl = new L.Control({position:"bottomleft"});
+covid19LegendControl.onAdd = function(map) {
+    let div = L.DomUtil.create("div", "accordion bg-white");
+
+    div.innerHTML += '<button class="btn btn-block bg-light text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">'+
+    'Cumulative Number of Positives</button>';
+   
+    let values = [0, 100, 500, 1000, 5000, 10000, 15000, 20000];
+    let labels = ["0-99", "100-499", "500 - 999", "1000 - 4999", "5000 - 9999", "10000 - 14999", "15000 - 19999", "20000 + "];
+
+    let legendItems = "";
+    values.forEach((value, index) => {
+        let color = getCovidColor(value);
+        let name = labels[index]
+        legendItems += "<div class='legend_wrapper'><div class='legend-item' style='background-color:"+color+"'></div><span>"+name+"</span></div>";
+    });
+
+    div.innerHTML += '<div class="collapse" id="collapseOne">'+ legendItems +'</div>';
+
+    return div;
+}
+
+covid19LegendControl.addTo(map);
+
 map.on('overlayremove', function(e) {
    console.log(e);
    if(e.name == "Income Levels") {
       map.removeControl(legendControl);
+   } else if (e.name == "Covid 19 Cumulative Cases") {
+      map.removeControl(covid19LegendControl);  
    }
 });
 
@@ -158,5 +213,7 @@ map.on('overlayadd', function(e) {
    console.log(e);
    if(e.name == "Income Levels") {
      legendControl.addTo(map);
+   } else if (e.name == "Covid 19 Cumulative Cases") {
+      map.addControl(covid19LegendControl);  
    }
 });
