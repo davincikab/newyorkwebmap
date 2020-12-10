@@ -97,7 +97,7 @@ let dataUrls = ['publick12.geojson', 'schooldistrict_boundary.geojson','income_d
 
 dataUrls.forEach((url, index) => {
    // fetch the data
-   fetch(`data/${url}`)
+   fetch(`geojson/${url}`)
    .then(res => res.json())
    .then(data  => {
       console.log(data);
