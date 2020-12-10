@@ -73,7 +73,7 @@ function getIncomeColor(income) {
 var covid19Rates = L.geoJSON(null);
 var broadbandAccess = L.geoJSON(null);   
 var demographics = L.geoJSON(null);  
-// var csiTsiSchools = L.geoJSON(null);
+var csiTsiSchools = L.geoJSON(null);
 
 
 function createPopupInfo(properties) {
