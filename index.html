@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Application</title>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""
+    />
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin="">
+    </script>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        #map {
+            height:100vh;
+            width:100%;
+        }
+
+        .map-marker {
+            height:6px;
+            width:6px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 2px 2px 0.2em #112120;
+        }
+
+        .itemKey {
+            text-transform: uppercase;
+            color:#888888;
+            padding-right: 5px;
+        }
+
+        .popup-content {
+            padding-top: 5px;
+            max-height: 300px;
+            margin-top: 18px;
+            overflow-y: auto;
+            color:#fff;
+        }
+
+        .popup-content .title {
+            font-weight: 700;
+            font-size: 1.2em;
+            margin:0;
+        }
+
+        .popup-content p {
+            margin:0 !important;
+            display: flex;
+            justify-content: space-between;
+        }
+        .leaflet-popup-content {
+            margin: 6px 8px;
+            line-height: 1.4;
+        }
+
+        .leaflet-popup-tip {
+            background: #222;
+        }
+        .leaflet-popup-content-wrapper {
+            padding: 1px;
+            text-align: left;
+            border-radius: 1px;
+            background-color: #222;
+        }
+
+        /* legend */
+        .legend_wrapper {
+            display: flex;
+            width: 200px;
+            background-color: black;
+            color: white;
+        }
+
+        .legend-item {
+            height: 20px;
+            padding:0.1em;
+            width:40%;
+            margin: 0.5em;
+            opacity: 0.7;
+        }
+
+        /* scrollablle */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #112120;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background:#dddddd;
+            border-radius: 5px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="map" id="map"></div>
+    <script src="main.js"></script>
+</body>
+</html>
